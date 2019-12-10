@@ -601,7 +601,7 @@ uis.controller('uiSelectCtrl',
       _refreshDelayPromise = $timeout(function() {
         if ($scope.$select.search.length >= $scope.$select.minimumInputLength) {
           var refreshPromise = $scope.$eval(refreshAttr);
-          if (refreshPromise && angular.isFunction(refreshPromise.then) && !ctrl.refreshing) {
+          if (refreshPromise && angular.isFunction(refreshPromise.finally) && !ctrl.refreshing) {
             ctrl.refreshing = true;
             refreshPromise.finally(function() {
               ctrl.refreshing = false;
@@ -1366,7 +1366,7 @@ uis.directive('uiSelect',
           element[0].style.width = originalWidth;
 
           // Set focus back on to the moved element
-          $select.setFocus();
+          //$select.setFocus();
         }
 
         // Hold on to a reference to the .ui-select-dropdown element for direction support.

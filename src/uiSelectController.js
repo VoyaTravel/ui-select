@@ -65,11 +65,6 @@ uis.controller('uiSelectCtrl',
     return isNil(ctrl.selected) || ctrl.selected === '' || (ctrl.multiple && ctrl.selected.length === 0);
   };
 
-  ctrl.getPlaceholder = function(){
-    if(ctrl.selected && ctrl.selected.length) return;
-    return ctrl.placeholder;
-  };
-
   function _findIndex(collection, predicate, thisArg){
     if (collection.findIndex){
       return collection.findIndex(predicate, thisArg);
@@ -158,7 +153,7 @@ uis.controller('uiSelectCtrl',
       } else {
         $timeout(function () {
           ctrl.focusSearchInput(initSearchValue);
-          if(!ctrl.tagging.isActivated && ctrl.items.length > 1 && ctrl.open) {
+          if(!ctrl.tagging.isActivated && ctrl.items.length > 1) {
             _ensureHighlightVisible();
           }
         });
@@ -175,12 +170,9 @@ uis.controller('uiSelectCtrl',
     ctrl.searchInput[0].focus();
   };
 
-  ctrl.findGroupByName = function(name, noStrict) {
+  ctrl.findGroupByName = function(name) {
     return ctrl.groups && ctrl.groups.filter(function(group) {
-      if (noStrict)
-        return group.name == name;
-      else
-        return group.name === name;
+      return group.name === name;
     })[0];
   };
 
@@ -584,10 +576,11 @@ uis.controller('uiSelectCtrl',
         }
         break;
       case KEY.UP:
+        var minActiveIndex = (ctrl.search.length === 0 && ctrl.tagging.isActivated) ? -1 : 0;
         if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
-        else if (ctrl.activeIndex > 0) {
+        else if (ctrl.activeIndex > minActiveIndex) {
           var idxmin = --ctrl.activeIndex;
-          while(_isItemDisabled(ctrl.items[idxmin]) && idxmin > 0) {
+          while(_isItemDisabled(ctrl.items[idxmin]) && idxmin > minActiveIndex) {
             ctrl.activeIndex = --idxmin;
           }
         }
